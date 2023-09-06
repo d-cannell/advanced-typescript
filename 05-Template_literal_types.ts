@@ -16,13 +16,21 @@ type Breakpoints = `${ScreenSizes}px`;
 type Digits = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type Tens = `${Digits}${Digits}`;
 type Hundreds = `${Digits}${Digits}${Digits}`;
+type Thousands = `${Digits}${Digits}${Digits}${Digits}`;
+// type TenThousands = `${Digits}${Digits}${Digits}${Digits}${Digits}`;
 
 type Decimals = `${Digits}.${Digits}${Digits}${Digits}`;
+
+type TrimZeros<S extends string> = S extends `${infer R}${'.'}` ? R : S extends `${infer R}${'0'}` ? TrimZeros<R> : S;
+
+type Trimmed = TrimZeros<Decimals>;
+
+const decimal: Trimmed = '2';
 
 type BoardFile = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h';
 type BoardRank = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type ChessboardSquare = `${BoardFile}${BoardRank}`;
-type ChessPiece = 'king' | 'queen' | 'rook' | 'bishop' | 'knight' | 'pawn';
+type ChessPiece = 'king' | 'queen' | 'rook' | 'bishop' | 'knight' | 'pawn' | 'none';
 type Chessboard = Record<ChessboardSquare, ChessPiece>;
 
 
@@ -31,7 +39,7 @@ type Chessboard = Record<ChessboardSquare, ChessPiece>;
 type SignedID<Prefix extends string> = `${Prefix}-${string}`;
 
 type UserSignedID = SignedID<'user'>;
-const userId: UserSignedID = 'user-1234';
+const userId: UserSignedID = 'user-wef';
 
 
 // You can also use template literal types to create mapped types.

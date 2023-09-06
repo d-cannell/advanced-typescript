@@ -22,6 +22,7 @@ type ConvertPropertiesToMethods<Object> = {
 
 type HumanMethods = ConvertPropertiesToMethods<Human>;
 
+
 // You can add and remove modifiers such as readonly or optional.
 
 type MakeReadonly<Object> = {
@@ -67,7 +68,7 @@ type RequiredHuman = MakeRequired<OptionalHuman>;
 
 // For example, with the Human type, you can access the name property like this:
 
-type Name = Human['name' | 'age'];
+type Name = Human['name'];
 
 // You can also use square bracket notation to access properties on a type that are themselves types.
 
@@ -83,7 +84,7 @@ type Colours = 'red' | 'green' | 'blue' | 'yellow' | 'orange' | 'purple';
 type ColourInfo = {
   [Colour in Colours]: {
     thisColour: Colour;
-    allColours: Colours;
+    otherColours: Omit<Colours, Colour>;
   };
 }[Colours];
 
@@ -123,11 +124,20 @@ type ResponseCode =
   | SuccessResponseCode
   | ErrorResponseCode;
 
-type ResponseShape = {
+type ResponseObject = {
   [C in ResponseCode]: {
     code: C;
     body: C extends SuccessResponseCode
-    ? { success: true }
+    ? { success: true; data: unknown }
     : { success: false; error: string };
   };
 }[ResponseCode];
+
+
+function handleResponse(response: ResponseObject) {
+  if (response.code === 200) {
+    console.log(response.body.data);
+  } else {
+    console.error(response.body.error);
+  }
+}

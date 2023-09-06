@@ -51,9 +51,11 @@ const routes = {
   contact: '/contact',
   login: '/login',
   account: '/account',
-};
+} as const;
 
-const routeTo = (route: string) => {
+type Routes = typeof routes[keyof typeof routes];
+
+const routeTo = (route: Routes) => {
   //...
 };
 
@@ -61,7 +63,7 @@ routeTo(routes.home);
 
 // Const enums
 
-// This can also be used to make more intuitive enums.
+// This can also be used to make enums.
 
 // The Direction enum below actually uses numbers to represent the values.
 
@@ -88,6 +90,7 @@ move(0);
 // Const enums are enums that are inlined at compile time.
 // This means that they don't exist at runtime.
 // This is slightly more efficient for package size, but it's not a big difference.
+// This can mean that you might have slightly less run-time type safety.
 
 const enum Compass {
   North = 'North',
@@ -105,18 +108,17 @@ function moveCompass(direction: Compass) {
 }
 
 moveCompass(Compass.North);
-// moveCompass('North');
 
 // Unless you cast the type to Compass, but this defeats the point of type safety.
 
 moveCompass('North' as Compass);
 
 
-// Declaring objects as const is a good alternative to enums.
+// Declaring objects as const is a fairly good alternative to enums.
 
 const Arrow = {
   Up: 'Up',
-  Down: 'Down',
+  Down: 'Downwards',
   Left: 'Left',
   Right: 'Right',
 } as const;
@@ -136,7 +138,7 @@ function moveArrow(direction: Arrow) {
 moveArrow(Arrow.Up);
 moveArrow('Up');
 
-// This is a good alternative to enums, but it's not a replacement.
+// This is a good alternative to enums, but it's not a full replacement.
 
 // Const arrays
 
@@ -154,7 +156,7 @@ type ConstArray = typeof constArray;
 // NormalArray is simply the same as number[], but ConstArray is different.
 // ConstArray is a tuple type, which means that it has a fixed length and each element has a specific type.
 // In this case, the length is 5 and each element is a number. However, in this example the numbers are actually fixed values.
-// If we want to create a tuple type not with fixed values, we can use implicit typing.
+// If we want to create a tuple type not with fixed values, we would have to use implicit typing.
 
 const constArray2 = [Math.random(), Math.random(), Math.random(), Math.random()] as const;
 
@@ -190,11 +192,10 @@ makeRequest(validHttpMethods[0]);
 
 validHttpMethods.forEach(makeRequest);
 
-// Let's look at what this would look like without the const keyword.
+// and we can also just manually enter the string values.
 
-const validHttpMethods2 = ['GET', 'POST', 'PUT', 'DELETE'];
+makeRequest('GET');
 
-type ValidHttpMethod2 = typeof validHttpMethods2[number];
+// If the array was not denoted as const, we would not be able to do this.
 
-
-
+// ['GET', 'POST', 'PUT', 'DELETE'].forEach(makeRequest);
